@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 
 namespace IdentityServer4Sample
 {
@@ -56,6 +57,25 @@ namespace IdentityServer4Sample
                         IdentityServerConstants.StandardScopes.Profile,
                         "api1"
                     }
+                }
+            };
+        }
+
+        internal static List<TestUser> GetTestUsers()
+        {
+            return new List<TestUser>
+            {
+                new TestUser
+                {
+                    SubjectId = "1",
+                    Username = "alice",
+                    Password = "password"
+                },
+                new TestUser
+                {
+                    SubjectId = "2",
+                    Username = "bob",
+                    Password = "password"
                 }
             };
         }
