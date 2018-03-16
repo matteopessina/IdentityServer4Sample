@@ -8,6 +8,7 @@ using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,16 +28,22 @@ namespace IdentityServer4Sample
             //in your hosting project(in this case it is in the nuget package) and allows us to run EF migrations. 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            services.AddDbContext<ApplicationDbContext>(builder =>
+                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddIdentityServer()
                .AddDeveloperSigningCredential()
-                 //this adds the config data from DB (clients, resources, CORS)
+                //this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
-                 //this adds the operational data from DB (codes, tokens, consents)
+                //this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
@@ -46,7 +53,7 @@ namespace IdentityServer4Sample
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
                 })
-               .AddTestUsers(Config.GetTestUsers());
+                .AddAspNetIdentity<IdentityUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,9 +78,13 @@ namespace IdentityServer4Sample
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+
                 context.Database.Migrate();
+
                 if (!context.Clients.Any())
                 {
                     foreach (var client in Config.GetClients())
@@ -99,6 +110,21 @@ namespace IdentityServer4Sample
                         context.ApiResources.Add(resource.ToEntity());
                     }
                     context.SaveChanges();
+                }
+
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                if (!userManager.Users.Any())
+                {
+                    foreach (var testUser in Config.GetTestUsers())
+                    {
+                        var identityUser = new IdentityUser(testUser.Username)
+                        {
+                            Id = testUser.SubjectId
+                        };
+
+                        userManager.CreateAsync(identityUser, "Password01!").Wait();
+                        userManager.AddClaimsAsync(identityUser, testUser.Claims.ToList()).Wait();
+                    }
                 }
             }
         }

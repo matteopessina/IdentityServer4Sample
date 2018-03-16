@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -78,13 +79,17 @@ namespace IdentityServer4Sample
                 {
                     SubjectId = "1",
                     Username = "alice",
-                    Password = "password"
+                    Password = "Password01!",
+                    Claims = new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.Role, "Admin")
+                    } 
                 },
                 new TestUser
                 {
                     SubjectId = "2",
                     Username = "bob",
-                    Password = "password"
+                    Password = "Password01!"
                 }
             };
         }
