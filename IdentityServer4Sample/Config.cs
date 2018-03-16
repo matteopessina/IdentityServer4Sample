@@ -61,6 +61,15 @@ namespace IdentityServer4Sample
             };
         }
 
+        internal static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+            };
+        }
+
         internal static List<TestUser> GetTestUsers()
         {
             return new List<TestUser>

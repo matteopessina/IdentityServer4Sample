@@ -1,4 +1,9 @@
 ﻿
+var identityProvider = "https://localhost:44354";
+var client = "https://localhost:44393";
+var resourceServer = "https://localhost:44359";
+
+
 function log() {
     document.getElementById('results').innerText = '';
 
@@ -43,15 +48,20 @@ function login() {
 
 function api() {
     mgr.getUser().then(function (user) {
-        var url = "https://localhost:44359/identity";
+        var url = "https://localhost:44359/api/identity";
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.onload = function () {
-            log(xhr.status, JSON.parse(xhr.responseText));
+        if (user == null || user.access_token == null) {
+            mgr.signinRedirect();
         }
-        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
-        xhr.send();
+        else {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.onload = function () {
+                log(xhr.status, JSON.parse(xhr.responseText));
+            }
+            xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+            xhr.send();
+        }
     });
 }
 
