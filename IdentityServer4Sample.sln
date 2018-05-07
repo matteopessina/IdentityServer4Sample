@@ -3,11 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4Sample", "IdentityServer4Sample\IdentityServer4Sample.csproj", "{3DB65ADF-2A75-4CDC-8018-52F3D96373D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4Sample", "IdentityServer4Sample\IdentityServer4Sample.csproj", "{3DB65ADF-2A75-4CDC-8018-52F3D96373D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceServer", "ResourceServer\ResourceServer.csproj", "{CF0C65A0-30D5-4E56-B3CD-6378E4F8EF8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceServer", "ResourceServer\ResourceServer.csproj", "{CF0C65A0-30D5-4E56-B3CD-6378E4F8EF8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavascriptClient", "JavascriptClient\JavascriptClient.csproj", "{52C73376-5B50-4D50-AFC6-855942B3FAED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JavascriptClient", "JavascriptClient\JavascriptClient.csproj", "{52C73376-5B50-4D50-AFC6-855942B3FAED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C2C6F490-5311-43E4-B257-8C1DDBCD07BC}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
